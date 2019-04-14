@@ -1,9 +1,8 @@
 require 'rails_helper'
-require 'api/scraper'
+require 'scraper/spot'
 
 describe Scraper::Spot do 
   describe "retrieves spot information" do
-
     it "#name" do 
       expect(subject.name).to eql "Airport's"
     end
@@ -44,4 +43,5 @@ describe Scraper::Spot do
   describe "runs operations for all surfspots"
   describe "saves to database"
   describe "query all the info in the database and generate new seeds file"
+
 end
