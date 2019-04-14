@@ -2,6 +2,8 @@ require 'rails_helper'
 require 'scraper/spot'
 
 describe Scraper::Spot do 
+  let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", type: "Reef-coral", wave_quality: "Normal" }}
+
   describe "retrieves spot information" do
     it "#name" do 
       expect(subject.name).to eql "Airport's"
@@ -17,6 +19,11 @@ describe Scraper::Spot do
 
     it "#additional_information" do
       expect(subject.additional_information).to match "Airport's right and left need quite a big"
+    end
+
+    it "#attributes" do 
+      subject.set_attributes
+      expect(subject.attributes).to eql attributes
     end
 
     it "#quality" do 
@@ -39,9 +46,4 @@ describe Scraper::Spot do
       expect(subject.bottom).to eql "Reef-coral"
     end
   end
-
-  describe "runs operations for all surfspots"
-  describe "saves to database"
-  describe "query all the info in the database and generate new seeds file"
-
 end
