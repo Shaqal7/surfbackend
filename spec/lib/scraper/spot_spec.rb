@@ -2,7 +2,8 @@ require 'rails_helper'
 require 'scraper/spot'
 
 describe Scraper::Spot do 
-  let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", type: "Reef-coral", wave_quality: "Normal" }}
+  subject { Scraper::Spot.new("https://www.wannasurf.com/spot/Asia/Indonesia/Bali/airports/index.html") }
+  let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", type: "Reef-coral", wave_quality: "Normal", name: "Airport's", latitude: "-8.745124", longitude: "115.150323" }}
 
   describe "retrieves spot information" do
     it "#name" do 
@@ -23,7 +24,7 @@ describe Scraper::Spot do
 
     it "#attributes" do 
       subject.set_attributes
-      expect(subject.attributes).to eql attributes
+      expect(subject.attributes).to match attributes
     end
   end
 end
