@@ -61,7 +61,24 @@ describe Scraper::Country do
     end
   end
 
-  describe "saves to database" do
+  describe "saves to database with" do
+    it "#scrape_country" do
+      expect {
+        subject.scrape_country
+      }.to change(Location, :count) #.by 24
+      expect(Location.first.latitude).to eql "0.488199"
+      expect(Location.first.longitude).to eql "122.992094" 
+      expect(Location.first.name).to eql "Gorontalo beach"
+      expect(Location.first.area).to eql "Sulawesi"
+      expect(Location.first.country).to eql "Indonesia"
+    end
+
+    it "#scrape_country duplicate" do
+      expect {
+        subject.scrape_country
+        subject.scrape_country
+      }.to change(Location, :count).by 24
+    end
   end
 
   describe "query all the info in the database and generate new seeds file"
