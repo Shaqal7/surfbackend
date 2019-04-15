@@ -22,6 +22,11 @@ describe Scraper::Spot do
       expect(subject.additional_information).to match "Airport's right and left need quite a big"
     end
 
+    it "#gps" do
+      expect(subject.gps.title).to match "GPS location"
+      expect(subject.spot).not_to match "GPS location"
+    end
+
     it "#attributes" do 
       subject.set_attributes
       expect(subject.attributes).to match attributes

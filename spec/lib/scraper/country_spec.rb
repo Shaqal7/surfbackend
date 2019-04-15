@@ -24,6 +24,14 @@ describe Scraper::Country do
       expect(subject.hrefs[0]).to eql "/spot/Asia/Indonesia/Sulawesi/index.html"
       expect(subject.hrefs[12]).to eql "/spot/Asia/Indonesia/Papua/index.html" 
     end
+
+    it "#set_spot" do
+      subject.set_spots("#{Scraper::WEBSITE}/spot/Asia/Indonesia/Sulawesi/index.html")
+      expect(subject.spots.size).to be > 0
+      expect(subject.spots.size).to be 1
+      expect(subject.spots.first).to be_instance_of(Scraper::Spot)
+      expect(subject.spots.first.attributes[:latitude]).to eql "0.488199" 
+    end
   end
 
   describe "runs operations for all surfspots"
