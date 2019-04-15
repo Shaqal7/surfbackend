@@ -5,7 +5,7 @@ require 'scraper/spot'
 describe Scraper::Spot do 
   subject { Scraper::Spot.new("#{Scraper::WEBSITE}/spot/Asia/Indonesia/Bali/airports/index.html") }
   let(:geger) { Scraper::Spot.new "#{Scraper::WEBSITE}/spot/Asia/Indonesia/Bali/geger/index.html" }
-  let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", type: "Reef-coral", wave_quality: "Normal", name: "Airport's", latitude: "-8.745124", longitude: "115.150323" }}
+  let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", bottom: "Reef-coral", wave_quality: "Normal", name: "Airport's", latitude: "-8.745124", longitude: "115.150323" }}
 
   describe "retrieves spot information" do
     it "#name" do 
