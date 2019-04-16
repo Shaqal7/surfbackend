@@ -46,9 +46,12 @@ describe Scraper::Spot do
     end
 
     it "#pictures" do
-      picture = "#{ENV['WEBSITE']}/spot/Asia/Indonesia/Bali/airports/photo/ico_photo_surf_Indonesia_Bali_airports_451d7ee651d4d.jpg"
-      expect(subject.pictures).to include picture
+      picture1 = "#{ENV['WEBSITE']}/spot/Asia/Indonesia/Bali/airports/photo/photo_surf_Indonesia_Bali_airports_451d7ee651d4d.jpg"
+      picture2 = "#{ENV['WEBSITE']}/spot/Asia/Indonesia/Bali/airports/photo/photo40250326ce125.jpg"
+      expect(subject.pictures).to include picture1
+      expect(subject.pictures).to include picture2
       expect(subject.pictures.size).to be 11 
+      expect(subject.pictures).to be_instance_of Array
     end
   end
 end

@@ -37,32 +37,46 @@ describe Scraper::Country do
     end
   end
 
-  describe "saves to database with" do
-    before(:each) do 
-      hrefs_stub = [ENV["SULAWESI"]]
-      table_stub = instance_double("Spots")
-      links_stub = [ENV["GORONTALO"]]
-      allow(subject).to receive(:hrefs).and_return(hrefs_stub)
-      allow(subject).to receive(:spots_table).and_return(table_stub)
-      allow(table_stub).to receive(:map).and_return(links_stub)
+  describe "saves to database using" do
+    context "one mocked data with" do
+      before(:each) do 
+        hrefs_stub = [ENV["SULAWESI"]]
+        table_stub = instance_double("Spots")
+        links_stub = [ENV["GORONTALO"]]
+        allow(subject).to receive(:hrefs).and_return(hrefs_stub)
+        allow(subject).to receive(:spots_table).and_return(table_stub)
+        allow(table_stub).to receive(:map).and_return(links_stub)
+      end
+
+      it "#scrape_country" do
+        expect {
+          subject.scrape_country
+        }.to change(Location, :count).by 1
+        expect(Location.first.latitude).to eql "0.488199"
+        expect(Location.first.longitude).to eql "122.992094" 
+        expect(Location.first.name).to eql "Gorontalo beach"
+        expect(Location.first.area).to eql "Sulawesi"
+        expect(Location.first.country).to eql "Indonesia"
+      end
+
+
+      it "#scrape_country but skips duplicates" do
+        Location.create(name: "Gorontalo beach", country: "Indonesia")
+        expect {
+          subject.scrape_country
+        }.to change(Location, :count).by 0
+      end
     end
 
-    it "#scrape_country" do
-      expect {
+    context "real data with" do 
+      it "#scrape_country" do
         subject.scrape_country
-      }.to change(Location, :count).by 1
-      expect(Location.first.latitude).to eql "0.488199"
-      expect(Location.first.longitude).to eql "122.992094" 
-      expect(Location.first.name).to eql "Gorontalo beach"
-      expect(Location.first.area).to eql "Sulawesi"
-      expect(Location.first.country).to eql "Indonesia"
-    end
-
-    it "#scrape_country but skips duplicates" do
-      Location.create(name: "Gorontalo beach", country: "Indonesia")
-      expect {
-        subject.scrape_country
-      }.to change(Location, :count).by 0
+        army = Location.find_by(name: "Army Camp")
+        expect(army.attributes["area"]).to eql "Sumba, Flores, Savu, Timor"
+        expect(army.attributes["longitude"]).to eql '-10.97949'
+        expect(army.attributes["latitude"]).to eql '122.843375'
+        expect(army.attributes["experience"]).to eql 'All surfers'
+      end
     end
   end
 
