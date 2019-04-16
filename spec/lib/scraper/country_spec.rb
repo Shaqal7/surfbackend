@@ -2,11 +2,10 @@ require 'rails_helper'
 require 'scraper/country'
 
 describe Scraper::Country do
-  subject { Scraper::Country.new(Scraper::INDO) }
-  let(:indo) { Scraper::Country.new(Scraper::INDO) }
-  let(:usa) { Scraper::Country.new(Scraper::USA) }
-  let(:arz) { Scraper::Country.new(Scraper::ARZEBAIJAN) }
-
+  subject { Scraper::Country.new(ENV['INDO']) }
+  let(:indo) { Scraper::Country.new(ENV['INDO']) }
+  let(:usa) { Scraper::Country.new(ENV['USA']) }
+  let(:arz) { Scraper::Country.new(ENV['ARZEBAIJAN']) }
   describe "retrieves information about" do
     it "#name" do
       expect(indo.name).to eql "Indonesia"
@@ -36,36 +35,22 @@ describe Scraper::Country do
       expect(subject.hrefs[0]).to eql "/spot/Asia/Indonesia/Sulawesi/index.html"
       expect(subject.hrefs[12]).to eql "/spot/Asia/Indonesia/Papua/index.html" 
     end
-
-    it "#set_spot" do
-      path = Scraper::Path.new("/spot/Asia/Indonesia/Sulawesi/index.html")
-      subject.send(:spots, [])
-      subject.set_spots(path)
-      expect(subject.spots.size).to be > 0
-      expect(subject.spots.size).to be 1
-      expect(subject.spots.first).to be_instance_of(Scraper::Spot)
-      expect(subject.spots.first.attributes[:latitude]).to eql "0.488199" 
-    end
-  end
-
-  describe "runs operations for all surfspots with" do
-    it "#scrape_country" do
-      subject.scrape_country
-      spots = subject.spots
-      expect(spots[0]).to be_instance_of Scraper::Spot
-      expect(spots[1]).to be_instance_of Scraper::Spot
-      expect(spots.size).to eql 216
-      expect(spots[0].attributes[:name]).to eql "Gorontalo beach"
-      expect(spots[1].attributes[:longitude]).to_not be_empty
-      expect(spots.last.attributes[:longitude]).to_not be_empty
-    end
   end
 
   describe "saves to database with" do
+    before(:each) do 
+      hrefs_stub = [ENV["SULAWESI"]]
+      table_stub = instance_double("Spots")
+      links_stub = [ENV["GORONTALO"]]
+      allow(subject).to receive(:hrefs).and_return(hrefs_stub)
+      allow(subject).to receive(:spots_table).and_return(table_stub)
+      allow(table_stub).to receive(:map).and_return(links_stub)
+    end
+
     it "#scrape_country" do
       expect {
         subject.scrape_country
-      }.to change(Location, :count) #.by 24
+      }.to change(Location, :count).by 1
       expect(Location.first.latitude).to eql "0.488199"
       expect(Location.first.longitude).to eql "122.992094" 
       expect(Location.first.name).to eql "Gorontalo beach"
@@ -73,11 +58,11 @@ describe Scraper::Country do
       expect(Location.first.country).to eql "Indonesia"
     end
 
-    it "#scrape_country duplicate" do
+    it "#scrape_country but skips duplicates" do
+      Location.create(name: "Gorontalo beach", country: "Indonesia")
       expect {
         subject.scrape_country
-        subject.scrape_country
-      }.to change(Location, :count).by 24
+      }.to change(Location, :count).by 0
     end
   end
 
