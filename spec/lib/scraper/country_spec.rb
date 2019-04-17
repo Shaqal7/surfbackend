@@ -73,9 +73,16 @@ describe Scraper::Country do
         subject.scrape_country
         army = Location.find_by(name: "Army Camp")
         expect(army.attributes["area"]).to eql "Sumba, Flores, Savu, Timor"
-        expect(army.attributes["longitude"]).to eql '-10.97949'
-        expect(army.attributes["latitude"]).to eql '122.843375'
+        expect(army.attributes["latitude"]).to eql '-10.97949'
+        expect(army.attributes["longitude"]).to eql '122.843375'
         expect(army.attributes["experience"]).to eql 'All surfers'
+      end
+
+      it "#scrape_scountry that do not have zones" do
+        lanka = Scraper::Country.new "#{ENV['WEBSITE']}/spot/Asia/Sri_Lanka/"
+        lanka.scrape_country
+        location = Location.find_by(name: "the peaks")
+        expect(location.attributes["country"]).to eql "Sri Lanka"
       end
     end
   end
