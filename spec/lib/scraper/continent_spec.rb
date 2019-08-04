@@ -1,6 +1,6 @@
 require 'rails_helper'
-require 'scraper/continent'
+require 'continent'
 
-describe Scraper::Continent do
+describe Continent do
   it "#countries" 
 end
