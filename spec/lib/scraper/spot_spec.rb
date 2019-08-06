@@ -3,8 +3,14 @@ require 'scraper'
 require 'scraper/spot'
 
 describe Scraper::Spot do 
-  subject { Scraper::Spot.new("#{ENV["WEBSITE"]}/spot/Asia/Indonesia/Bali/airports/index.html") }
-  let(:geger) { Scraper::Spot.new "#{ENV["WEBSITE"]}/spot/Asia/Indonesia/Bali/geger/index.html" }
+  subject do 
+    Scraper::Spot.new("#{ENV["WEBSITE"]}/spot/Asia/Indonesia/Bali/airports/index.html")
+  end
+
+  let(:geger) do 
+    Scraper::Spot.new "#{ENV["WEBSITE"]}/spot/Asia/Indonesia/Bali/geger/index.html" 
+  end
+
   let(:attributes) {{ direction: "Right and left", experience: "All surfers", frequency: "Sometimes break", bottom: "Reef-coral", wave_quality: "Normal", name: "Airport's", latitude: "-8.745124", longitude: "115.150323", pictures: "" }}
 
   describe "retrieves spot information" do
